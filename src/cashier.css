@@ -1,0 +1,127 @@
+#bayanihan-math .sv-cashier-screen {
+  padding: clamp(8px, 2vw, 24px) clamp(8px, 3vw, 38px) 16px;
+}
+#bayanihan-math .sv-cash-counter {
+  padding: clamp(12px, 1.8vw, 24px);
+}
+#bayanihan-math .sv-register-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-bottom: 12px;
+}
+#bayanihan-math .sv-register-header h2 {
+  color: #263e2d;
+  font-size: clamp(23px, 2.7vw, 36px);
+  line-height: 1.12;
+}
+#bayanihan-math .sv-register-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#bayanihan-math .sv-register-tools > button {
+  position: static;
+  min-height: 44px;
+  padding: 6px 10px;
+  font-size: 15px;
+}
+#bayanihan-math .sv-queue-label {
+  margin: 0 0 3px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #48613d;
+}
+#bayanihan-math .sv-customer-order {
+  background: #efe2be;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+#bayanihan-math .sv-receipt-food {
+  align-items: center;
+  justify-content: center;
+  width: clamp(66px, 10vw, 125px);
+}
+#bayanihan-math .sv-receipt-food > * {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 58px;
+}
+#bayanihan-math .sv-coin {
+  display: inline-grid;
+  justify-items: center;
+  gap: 2px;
+  min-width: 44px;
+  min-height: 44px;
+}
+#bayanihan-math .sv-coin .ss-money-value { display: none; }
+#bayanihan-math .sv-coin .ss-currency {
+  width: clamp(38px, 4.4vw, 56px);
+  height: clamp(38px, 4.4vw, 56px);
+}
+#bayanihan-math .sv-coin-value {
+  font: bold clamp(16px, 1.7vw, 22px)/1 var(--classroom-font);
+  color: #263e2d;
+}
+#bayanihan-math .sv-coin:disabled { opacity: .83; }
+#bayanihan-math .sv-change-tray { min-height: 54px; }
+#bayanihan-math .sv-zero { margin-top: 6px; }
+#bayanihan-math .sv-zero[aria-pressed="true"] {
+  background: #315941;
+  color: white;
+}
+#bayanihan-math .sv-count-guide {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-inline-start: 4px solid #698753;
+  background: #edf1df;
+  border-radius: 4px;
+  color: #243c2b;
+}
+#bayanihan-math .sv-count-guide summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 3px 0;
+}
+#bayanihan-math .sv-count-guide p { margin: 6px 0; }
+#bayanihan-math [data-ma="cashier-guide-equation"] {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(20px, 2.4vw, 30px);
+}
+#bayanihan-math .sv-cash-feedback { margin: 12px 0 8px; }
+#bayanihan-math .sv-receipts h3 { font-size: clamp(22px, 2.4vw, 30px); }
+#bayanihan-math .sv-receipts ol { list-style: none; margin: 0 0 16px; padding: 0; }
+#bayanihan-math .sv-receipts li {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px dashed #a9946c;
+}
+#bayanihan-math .sv-receipts .ma-art-unit { display: block; width: 48px; height: 48px; }
+#bayanihan-math .sv-receipts small { display: block; font-size: 1em; }
+#bayanihan-math .sv-cashier-screen :focus-visible {
+  outline: 3px solid #245944;
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  #bayanihan-math .sv-cash-work { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  #bayanihan-math .sv-cash-sum {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    text-align: start;
+    column-gap: 6px;
+  }
+  #bayanihan-math .sv-cash-sum strong:nth-of-type(2) { border: 0; }
+  #bayanihan-math .sv-cash-sum strong { font-size: 24px; }
+  #bayanihan-math .sv-customer-order { overflow-wrap: anywhere; }
+  #bayanihan-math .sv-customer-order { gap: 6px; padding: 8px; }
+  #bayanihan-math .sv-customer-order [data-ma="cashier-note"] .ss-currency { max-width: 54px; }
+  #bayanihan-math .sv-actions { flex-wrap: wrap; }
+  #bayanihan-math .sv-receipts li { grid-template-columns: 35px minmax(0, 1fr) auto; gap: 5px; }
+  #bayanihan-math .sv-receipts .ma-art-unit { width: 32px; height: 32px; }
+}
