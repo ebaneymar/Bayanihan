@@ -1,0 +1,105 @@
+name: Publish SUHANAYAN
+
+on:
+  push:
+    branches: [main]
+    paths: ['releases/v*.md']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: suhanayan-publish
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.game.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build the offline game with the published Windows launcher
+        id: game
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=$(python -c 'from build_game import VERSION; print(VERSION)')
+          test -f "releases/v${version}.md"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          mkdir -p base dist
+          gh release download v1.2.8 --repo "$GITHUB_REPOSITORY" --dir base --pattern 'game.html' --pattern 'BayanihanMath.exe'
+          echo 'ae941f4632ddff7175dc9beff112936981f08e792a808f21cc140e7ff9aebcda  base/BayanihanMath.exe' | sha256sum --check --status
+          python build_game.py --base base/game.html --output dist/game.html
+          cp base/BayanihanMath.exe dist/BayanihanMath.exe
+      - name: Test the four customers, change, receipts and both languages offline
+        run: |
+          python -m pip install 'playwright==1.62.0'
+          python -m playwright install --with-deps chromium
+          python tests/test_cashier.py dist/game.html
+      - name: Package verified Windows update and portable game
+        env:
+          VERSION: ${{ steps.game.outputs.version }}
+        run: |
+          set -euo pipefail
+          python - <<'PYTHON'
+          import os
+          from pathlib import Path
+          import subprocess
+          import zipfile
+
+          package = Path('dist') / f"SUHANAYAN_{os.environ['VERSION']}_Offline.zip"
+          sources = subprocess.check_output(['git', 'ls-files', 'README.md', 'build_game.py', 'src', 'tests'], text=True).splitlines()
+          entries = [('game.html', Path('dist/game.html'))] + [('Source/' + src, Path(src)) for src in sources]
+          with zipfile.ZipFile(package, 'w') as archive:
+              for name, path in entries:
+                  archive.writestr(zipfile.ZipInfo(name), path.read_bytes(), zipfile.ZIP_DEFLATED, compresslevel=6)
+          PYTHON
+          cd dist
+          unzip -tq "SUHANAYAN_${VERSION}_Offline.zip"
+          sha256sum BayanihanMath.exe game.html "SUHANAYAN_${VERSION}_Offline.zip" > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-game
+          path: dist/
+          compression-level: 0
+          if-no-files-found: error
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: verified-game
+          path: dist
+      - name: Publish the tested assets through the GitHub updater
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum --check SHA256SUMS.txt)
+          tag="v$VERSION"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,targetCommitish > prior.json 2>/dev/null; then
+            if [[ "$(jq -r .isDraft prior.json)" == false ]]; then
+              gh release download "$tag" --repo "$GITHUB_REPOSITORY" --dir existing --pattern SHA256SUMS.txt
+              cmp dist/SHA256SUMS.txt existing/SHA256SUMS.txt
+              exit 0
+            fi
+            [[ "$(jq -r .targetCommitish prior.json)" == "$GITHUB_SHA" ]]
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "SUHANAYAN $tag — Sari-sari Store" --notes-file "releases/$tag.md" --draft
+          fi
+          gh release upload "$tag" dist/game.html dist/BayanihanMath.exe dist/SHA256SUMS.txt "dist/SUHANAYAN_${VERSION}_Offline.zip" --repo "$GITHUB_REPOSITORY" --clobber
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --latest
