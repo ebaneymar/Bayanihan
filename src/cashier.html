@@ -1,0 +1,54 @@
+    <section class="sv-cashier-screen" data-screen="cashier" aria-labelledby="sv-cashier-title" hidden>
+      <div class="sv-cash-counter">
+        <header class="sv-register-header">
+          <div>
+            <p class="sv-queue-label" data-ma="cashier-progress"></p>
+            <h2 id="sv-cashier-title" data-i18n="cashierEntry">Ako ang tindero · Magsukli</h2>
+          </div>
+          <div class="sv-register-tools" data-ma="cashier-tools">
+            <button type="button" class="ma-secondary" data-ma="cashier-back" data-i18n="shopBack">Balik sa tindahan</button>
+          </div>
+        </header>
+        <div data-ma="cashier-playing">
+          <section class="sv-customer-order" aria-labelledby="sv-order-title">
+            <div class="sv-receipt-food" data-ma="cashier-food" aria-hidden="true"></div>
+            <div>
+              <strong id="sv-order-title" data-ma="cashier-order" tabindex="-1"></strong>
+              <p data-ma="cashier-customer"></p>
+            </div>
+            <div data-ma="cashier-note" aria-hidden="true"></div>
+          </section>
+          <div class="sv-cash-work">
+            <section>
+              <h3 data-i18n="cashDrawer">Kaha ng tindahan</h3>
+              <div class="sv-coins" data-ma="cashier-drawer"></div>
+              <h3 data-i18n="changeTray">Sukli sa mamimili</h3>
+              <div class="sv-coins sv-change-tray" data-ma="cashier-tray"></div>
+              <button type="button" class="ma-secondary sv-zero" data-ma="cashier-zero" aria-pressed="false" data-i18n="noCashierChange">Walang sukli</button>
+            </section>
+            <aside class="sv-cash-sum">
+              <span data-i18n="tendered">Ibinayad</span><strong data-ma="cashier-paid"></strong>
+              <span data-i18n="pricePaid">Halaga</span><strong data-ma="cashier-cost"></strong>
+              <span data-i18n="yourChange">Sukli mo</span><strong data-ma="cashier-total"></strong>
+            </aside>
+          </div>
+          <details class="sv-count-guide" data-ma="cashier-guide">
+            <summary data-i18n="cashierGuide">Gabay sa pagbilang pataas</summary>
+            <p data-ma="cashier-guide-instruction"></p>
+            <strong data-ma="cashier-guide-equation"></strong>
+          </details>
+          <p class="sv-cash-feedback" data-ma="cashier-feedback" role="status" aria-live="polite"></p>
+          <div class="sv-actions">
+            <button type="button" class="ma-primary" data-ma="cashier-check" data-i18n="handChange">Iabot ang sukli</button>
+            <button type="button" class="ma-primary" data-ma="cashier-next" hidden></button>
+            <button type="button" class="ma-secondary" data-ma="cashier-another" data-i18n="anotherWay" hidden>Ibang paraan</button>
+            <button type="button" class="ma-secondary" data-ma="cashier-reset" data-i18n="clearCashierTray">Alisin ang mga barya</button>
+          </div>
+        </div>
+        <section class="sv-receipts" data-ma="cashier-receipts" hidden>
+          <h3 data-ma="cashier-receipt-title" data-i18n="cashierReceipts" tabindex="-1">Mga resibo ng klase</h3>
+          <ol data-ma="cashier-receipt-list"></ol>
+          <button type="button" class="ma-primary" data-ma="cashier-replay" data-i18n="cashierReplay">Laruin muli</button>
+        </section>
+      </div>
+    </section>
